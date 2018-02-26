@@ -84,6 +84,14 @@ class profiles::monitoring::icinga2 (
     accept_config   => true,
     accept_commands => true,
     zones           => $zones,
+    pki             => 'ca',
+  }
+
+  file { '/etc/icinga2/repository.d':
+    ensure => directory,
+    owner  => 'icinga',
+    group  => 'icinga',
+    before  => Service['icinga2'],
   }
 
   icinga2::object::zone { ['global-templates', 'linux-commands']:
@@ -140,8 +148,8 @@ class profiles::monitoring::icinga2 (
       '/etc/icinga2/zones.d/linux-commands',
       '/etc/icinga2/zones.d/global-templates']:
       ensure => directory,
-      owner  => 'nagios',
-      group  => 'nagios',
+      owner  => 'icinga',
+      group  => 'icinga',
       mode   => '0750',
       tag    => 'icinga2::config::file',
     }
@@ -266,8 +274,8 @@ class profiles::monitoring::icinga2 (
     # Static config files
     file { '/etc/icinga2/zones.d/global-templates/templates.conf':
       ensure => file,
-      owner  => 'nagios',
-      group  => 'nagios',
+      owner  => 'icinga',
+      group  => 'icinga',
       mode   => '0640',
       source => 'puppet:///modules/profiles/monitoring/icinga2/templates.conf',
     }

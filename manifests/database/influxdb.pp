@@ -4,6 +4,29 @@
 #  class { '::profiles::database::influxdb': }
 #
 # @param manage_repo Manage repositories.
+#
+# Influxdb module:
+# https://github.com/dgolja/golja-influxdb.git
+#
+# Hieradata example:
+#
+# profiles::database::influxdb: true
+# profiles::database::influxdb::manage_repo: true
+#
+# influxdb::graphite_config:
+#   default:
+#     enabled: false
+# influxdb::retention_config:
+#   enabled: true
+#   check_interval: '10m0s'
+# influxdb::http_config:
+#   default:
+#     enabled: true
+#     bind-address: ':8086'
+#     auth-enabled: true
+#     log-enabled: true
+#     https-enabled: false
+#
 class profiles::database::influxdb (
   Boolean $manage_repo = false,
 ){
@@ -25,6 +48,10 @@ class profiles::database::influxdb (
         'templates'         => [],
       }
     },
-    manage_repos    => $manage_repo,
+  }
+
+  if $manage_repo {
+    include ::influxdb::repo
+    Yumrepo['repos.influxdata.com'] -> Package['influxdb']
   }
 }

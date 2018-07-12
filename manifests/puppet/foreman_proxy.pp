@@ -15,7 +15,7 @@ class profiles::puppet::foreman_proxy (
   Boolean $custom_repo = false,
   String $foreman_host = 'foreman',
   Boolean $manage_sudoersd = true,
-  String$oauth_consumer_key = 'secret',
+  String $oauth_consumer_key = 'secret',
   String $oauth_consumer_secret = 'secret',
   String $protocol = 'https',
   Boolean $puppetca = false,

@@ -75,6 +75,10 @@ class profiles::monitoring::icinga2 (
   }
 
 
+  package { 'nagios-plugins-all':
+    name => $plugins_package,
+  }
+
   class { '::icinga2':
     confd       => $confd,
     constants   => $constants,
@@ -112,10 +116,6 @@ class profiles::monitoring::icinga2 (
         parent    => $parent_zone,
         target    => "/etc/icinga2/zones.d/${parent_zone}/${::hostname}.conf",
       }
-    }
-
-    package { 'nagios-plugins-all':
-      name => $plugins_package,
     }
 
     @@::icinga2::object::host { $::fqdn:

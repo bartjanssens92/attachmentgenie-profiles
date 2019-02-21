@@ -36,6 +36,10 @@ class profiles::bootstrap::firewall (
     protocol  => 'all',
   }
 
+  profiles::bootstrap::firewall::entry { '003 ssh':
+    port => 22,
+  }
+
   profiles::bootstrap::firewall::entry { '999 reject everything else':
     action   => 'reject',
     protocol => 'all',

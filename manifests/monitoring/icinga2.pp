@@ -8,6 +8,7 @@
 # @param api_pki           Cypher to use for api certs.
 # @param api_user          Api user.
 # @param checkcommands     List of checks
+# @param api_users         Hash of api users to generate.
 # @param client            Is this a icinga client.
 # @param confd             Include conf.d directory or specify your own.
 # @param database_host     Db host.
@@ -36,6 +37,7 @@ class profiles::monitoring::icinga2 (
   String $api_password = 'icinga',
   String $api_pki = 'puppet',
   String $api_user = 'root',
+  Optional[Hash] $api_users = undef,
   Boolean $client = true,
   Variant[Boolean,String] $confd = false,
   String $database_host = '127.0.0.1',
@@ -145,6 +147,15 @@ class profiles::monitoring::icinga2 (
       password    => $api_password,
       permissions => [ '*' ],
       target      => "/etc/icinga2/zones.d/${parent_zone}/api-users.conf",
+    }
+
+    if $api_users and $api_users != {} {
+      $api_users.each | $user, $opts | {
+        ::icinga2::object::apiuser { $user:
+          *      => $opts,
+          target => "/etc/icinga2/zones.d/${parent_zone}/api-users.conf",
+        }
+      }
     }
 
     file { ['/etc/icinga2/zones.d/master',

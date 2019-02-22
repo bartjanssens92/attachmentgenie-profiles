@@ -164,4 +164,8 @@ class profiles::metrics::grafana (
   create_resources( ::profiles::metrics::grafana::dashboard, $dashboards, $defaults )
 
   create_resources( ::profiles::metrics::grafana::datasource, $datasources, $defaults )
+
+  profiles::bootstrap::firewall::entry { '200 allow grafana':
+    port => 3000,
+  }
 }
